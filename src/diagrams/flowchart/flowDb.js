@@ -263,29 +263,11 @@ const setupToolTips = function (element) {
 
   const nodes = svg.selectAll('g.node')
   nodes
-    .on('mouseover', function () {
-      const el = d3.select(this)
-      const title = el.attr('title')
-      // Dont try to draw a tooltip if no data is provided
-      if (title === null) {
-        return
-      }
-      const rect = this.getBoundingClientRect()
-
-      tooltipElem.transition()
-        .duration(200)
-        .style('opacity', '.9')
-      tooltipElem.html(el.attr('title'))
-        .style('left', (rect.left + (rect.right - rect.left) / 2) + 'px')
-        .style('top', (rect.top - 14 + document.body.scrollTop) + 'px')
-      el.classed('hover', true)
-    })
-    .on('mouseout', function () {
-      tooltipElem.transition()
-        .duration(500)
-        .style('opacity', 0)
-      const el = d3.select(this)
-      el.classed('hover', false)
+    .insert('title', ':first-child')
+    .text(function () {
+      const title = this.parentNode.getAttribute('title')
+      this.parentNode.removeAttribute('title')
+      return title
     })
 }
 funs.push(setupToolTips)
